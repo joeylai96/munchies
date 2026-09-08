@@ -318,6 +318,7 @@ function ProgressView({ profile, weightHistory, onLogWeight, daysLoggedCount }) 
 
 function SettingsView({ profile, onProfileChange, onLogout, onAccountDeleted }) {
   const [local, setLocal] = useState(profile);
+  const [goalWeightInput, setGoalWeightInput] = useState(profile.weight_goal_kg ? formatWeight(profile.weight_goal_kg, profile.weight_unit || "kg") : "");
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(false);
@@ -338,7 +339,7 @@ function SettingsView({ profile, onProfileChange, onLogout, onAccountDeleted }) 
       carbs_goal: Number(local.carbs_goal),
       fat_goal: Number(local.fat_goal),
       water_goal: Number(local.water_goal),
-      weight_goal_kg: local.weight_goal_kg ? toKg(local.weight_goal_kg, unit) : null,
+      weight_goal_kg: goalWeightInput ? toKg(goalWeightInput, unit) : null,
     };
     await onProfileChange(fields);
     setSaving(false);
@@ -416,7 +417,7 @@ function SettingsView({ profile, onProfileChange, onLogout, onAccountDeleted }) 
         ))}
         <div>
           <label style={label}>Goal weight ({unit}, optional)</label>
-          <input type="number" step="0.1" value={local.weight_goal_kg ? formatWeight(local.weight_goal_kg, unit) : ""} onChange={(e) => update("weight_goal_kg", e.target.value)} style={{ ...inputStyle, width: "100%", marginTop: 4 }} />
+          <input type="number" step="0.1" value={goalWeightInput} onChange={(e) => { setGoalWeightInput(e.target.value); setSaved(false); }} style={{ ...inputStyle, width: "100%", marginTop: 4 }} />
         </div>
       </div>
 
